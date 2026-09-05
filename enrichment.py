@@ -259,11 +259,11 @@ class CompressedSensingQuantumStateTomographyEngine:
         return res
 
 # =============================================================================
-# 6. IMPLEMENTATION
+# 6. IMPLEMENTATION (Compressed Sensing variant)
 # =============================================================================
 @dataclass
-class ImplementationEngineResult:
-    feature_name: str = "Implementation"
+class CompressedSensingImplementationEngineResult:
+    feature_name: str = "Implementation (Compressed Sensing)"
     status: str = "OPTIMAL"
     score: float = 0.0
     metrics: Dict[str, Any] = field(default_factory=dict)
@@ -271,16 +271,16 @@ class ImplementationEngineResult:
     recommendations: List[str] = field(default_factory=list)
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
-class ImplementationEngine:
+class CompressedSensingImplementationEngine:
     """
     Implementation: - Add `CompressedSensingTomography` implementing nuclear norm minimization
     """
     def __init__(self, threshold: float = 1.0, config: Optional[Dict[str, Any]] = None):
         self.threshold = threshold
         self.config = config or {}
-        self.history: List[ImplementationEngineResult] = []
+        self.history: List[CompressedSensingImplementationEngineResult] = []
 
-    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> ImplementationEngineResult:
+    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> CompressedSensingImplementationEngineResult:
         alerts = []
         recs = []
         status = "OPTIMAL"
@@ -288,17 +288,17 @@ class ImplementationEngine:
 
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
-            alerts.append(f"Implementation: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
+            alerts.append(f"Implementation (Compressed Sensing): Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
             recs.append("Initiate immediate protocol review and escalate to attending lead.")
         elif primary_value > self.threshold:
             status = "WARNING"
-            alerts.append(f"Implementation: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
+            alerts.append(f"Implementation (Compressed Sensing): Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
             recs.append("Increase monitoring frequency and perform secondary verification.")
         else:
             recs.append("Parameters nominal under standard operating bounds.")
 
-        res = ImplementationEngineResult(
-            feature_name="Implementation",
+        res = CompressedSensingImplementationEngineResult(
+            feature_name="Implementation (Compressed Sensing)",
             status=status,
             score=score,
             metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
@@ -309,11 +309,11 @@ class ImplementationEngine:
         return res
 
 # =============================================================================
-# 7. FILES TO CREATE/MODIFY
+# 7. FILES TO CREATE/MODIFY (Compressed Sensing variant)
 # =============================================================================
 @dataclass
-class FilesToCreatemodifyEngineResult:
-    feature_name: str = "Files to Create/Modify"
+class CompressedSensingFilesToCreatemodifyEngineResult:
+    feature_name: str = "Files to Create/Modify (Compressed Sensing)"
     status: str = "OPTIMAL"
     score: float = 0.0
     metrics: Dict[str, Any] = field(default_factory=dict)
@@ -321,16 +321,16 @@ class FilesToCreatemodifyEngineResult:
     recommendations: List[str] = field(default_factory=list)
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
-class FilesToCreatemodifyEngine:
+class CompressedSensingFilesToCreatemodifyEngine:
     """
     Files to Create/Modify: - `compressed_sensing/cs_tomography.py`: Compressed sensing tomography
     """
     def __init__(self, threshold: float = 1.0, config: Optional[Dict[str, Any]] = None):
         self.threshold = threshold
         self.config = config or {}
-        self.history: List[FilesToCreatemodifyEngineResult] = []
+        self.history: List[CompressedSensingFilesToCreatemodifyEngineResult] = []
 
-    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> FilesToCreatemodifyEngineResult:
+    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> CompressedSensingFilesToCreatemodifyEngineResult:
         alerts = []
         recs = []
         status = "OPTIMAL"
@@ -338,17 +338,17 @@ class FilesToCreatemodifyEngine:
 
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
-            alerts.append(f"Files to Create/Modify: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
+            alerts.append(f"Files to Create/Modify (Compressed Sensing): Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
             recs.append("Initiate immediate protocol review and escalate to attending lead.")
         elif primary_value > self.threshold:
             status = "WARNING"
-            alerts.append(f"Files to Create/Modify: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
+            alerts.append(f"Files to Create/Modify (Compressed Sensing): Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
             recs.append("Increase monitoring frequency and perform secondary verification.")
         else:
             recs.append("Parameters nominal under standard operating bounds.")
 
-        res = FilesToCreatemodifyEngineResult(
-            feature_name="Files to Create/Modify",
+        res = CompressedSensingFilesToCreatemodifyEngineResult(
+            feature_name="Files to Create/Modify (Compressed Sensing)",
             status=status,
             score=score,
             metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
@@ -359,11 +359,11 @@ class FilesToCreatemodifyEngine:
         return res
 
 # =============================================================================
-# 8. TESTING
+# 8. TESTING (Compressed Sensing variant)
 # =============================================================================
 @dataclass
-class TestingEngineResult:
-    feature_name: str = "Testing"
+class CompressedSensingTestingEngineResult:
+    feature_name: str = "Testing (Compressed Sensing)"
     status: str = "OPTIMAL"
     score: float = 0.0
     metrics: Dict[str, Any] = field(default_factory=dict)
@@ -371,16 +371,16 @@ class TestingEngineResult:
     recommendations: List[str] = field(default_factory=list)
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
-class TestingEngine:
+class CompressedSensingTestingEngine:
     """
     Testing: - Verify CS achieves O(r*d) measurement complexity for rank-r states
     """
     def __init__(self, threshold: float = 1.0, config: Optional[Dict[str, Any]] = None):
         self.threshold = threshold
         self.config = config or {}
-        self.history: List[TestingEngineResult] = []
+        self.history: List[CompressedSensingTestingEngineResult] = []
 
-    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> TestingEngineResult:
+    def evaluate(self, primary_value: float, secondary_value: float = 0.0, **kwargs) -> CompressedSensingTestingEngineResult:
         alerts = []
         recs = []
         status = "OPTIMAL"
@@ -388,17 +388,17 @@ class TestingEngine:
 
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
-            alerts.append(f"Testing: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
+            alerts.append(f"Testing (Compressed Sensing): Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
             recs.append("Initiate immediate protocol review and escalate to attending lead.")
         elif primary_value > self.threshold:
             status = "WARNING"
-            alerts.append(f"Testing: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
+            alerts.append(f"Testing (Compressed Sensing): Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
             recs.append("Increase monitoring frequency and perform secondary verification.")
         else:
             recs.append("Parameters nominal under standard operating bounds.")
 
-        res = TestingEngineResult(
-            feature_name="Testing",
+        res = CompressedSensingTestingEngineResult(
+            feature_name="Testing (Compressed Sensing)",
             status=status,
             score=score,
             metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
@@ -419,9 +419,9 @@ class QuantumstatetomographymleEnrichmentSuite:
         self.filestocreatemodifye = FilesToCreatemodifyEngine()
         self.testingengine = TestingEngine()
         self.compressedsensingqua = CompressedSensingQuantumStateTomographyEngine()
-        self.implementationengine = ImplementationEngine()
-        self.filestocreatemodifye = FilesToCreatemodifyEngine()
-        self.testingengine = TestingEngine()
+        self.cs_implementationengine = CompressedSensingImplementationEngine()
+        self.cs_filestocreatemodifye = CompressedSensingFilesToCreatemodifyEngine()
+        self.cs_testingengine = CompressedSensingTestingEngine()
 
     def execute_all(self, primary_val: float = 1.5, secondary_val: float = 0.5) -> Dict[str, Any]:
         results = {}
@@ -430,9 +430,9 @@ class QuantumstatetomographymleEnrichmentSuite:
         results["FilesToCreatemodifyEngine"] = self.filestocreatemodifye.evaluate(primary_val, secondary_val)
         results["TestingEngine"] = self.testingengine.evaluate(primary_val, secondary_val)
         results["CompressedSensingQuantumStateTomographyEngine"] = self.compressedsensingqua.evaluate(primary_val, secondary_val)
-        results["ImplementationEngine"] = self.implementationengine.evaluate(primary_val, secondary_val)
-        results["FilesToCreatemodifyEngine"] = self.filestocreatemodifye.evaluate(primary_val, secondary_val)
-        results["TestingEngine"] = self.testingengine.evaluate(primary_val, secondary_val)
+        results["CompressedSensingImplementationEngine"] = self.cs_implementationengine.evaluate(primary_val, secondary_val)
+        results["CompressedSensingFilesToCreatemodifyEngine"] = self.cs_filestocreatemodifye.evaluate(primary_val, secondary_val)
+        results["CompressedSensingTestingEngine"] = self.cs_testingengine.evaluate(primary_val, secondary_val)
         return results
 
 # Global instance

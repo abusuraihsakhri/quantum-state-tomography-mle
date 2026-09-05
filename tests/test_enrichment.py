@@ -1,6 +1,7 @@
 """
 Automated Pytest for quantum-state-tomography-mle Enrichment Modules.
 """
+import os
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -12,9 +13,9 @@ from enrichment import (
     FilesToCreatemodifyEngine,
     TestingEngine,
     CompressedSensingQuantumStateTomographyEngine,
-    ImplementationEngine,
-    FilesToCreatemodifyEngine,
-    TestingEngine,
+    CompressedSensingImplementationEngine,
+    CompressedSensingFilesToCreatemodifyEngine,
+    CompressedSensingTestingEngine,
     QuantumstatetomographymleEnrichmentSuite,
     enrichment_suite,
 )
