@@ -153,3 +153,48 @@ class TestCLIBatchErrorHandling:
             os.unlink(temp_path)
             if os.path.exists(out_path):
                 os.unlink(out_path)
+
+
+
+class TestAuditTamperDetection:
+    def test_modified_signed_fields_rejected(self):
+        trail = AuditTrail(secret_key="test-audit-verification-key")
+        trail.log("actor1", "tier1", "EVENT_1", {"key": "value"})
+        trail.log("actor2", "tier1", "EVENT_2", {"key": "value"})
+        assert trail.verify_integrity() is True
+        trail.logs[0]["actor"] = "impostor"
+        assert trail.verify_integrity() is False
+
+    def test_relinked_hash_chain_rejected(self):
+        trail = AuditTrail(secret_key="test-audit-verification-key")
+        trail.log("actor", "tier", "EVENT_1", {"key": "v1"})
+        trail.log("actor", "tier", "EVENT_2", {"key": "v2"})
+        trail.logs[0]["current_hash"] = "0" * 64
+        trail.logs[1]["prev_hash"] = "0" * 64
+        assert trail.verify_integrity() is False
+
+    def test_exposed_trail_is_copy(self):
+        trail = AuditTrail(secret_key="test-audit-verification-key")
+        trail.log("actor", "tier", "EVENT", {"key": "value"})
+        public_log = trail.get_trail()
+        public_log[0]["actor"] = "attacker"
+        assert trail.verify_integrity() is True
+
+
+class TestAuditLogAccess:
+    def test_disabled_by_default(self, monkeypatch):
+        from fastapi.testclient import TestClient
+        from agents.api import app
+        monkeypatch.delenv("AUDIT_READ_TOKEN", raising=False)
+        client = TestClient(app)
+        assert client.get("/api/audit/logs").status_code == 403
+
+    def test_requires_bearer_token(self, monkeypatch):
+        from fastapi.testclient import TestClient
+        from agents.api import app
+        monkeypatch.setenv("AUDIT_READ_TOKEN", "test-audit-read-token")
+        client = TestClient(app)
+        assert client.get("/api/audit/logs").status_code == 401
+        assert client.get("/api/audit/logs", headers={
+            "Authorization": "Bearer test-audit-read-token"
+        }).status_code == 200
