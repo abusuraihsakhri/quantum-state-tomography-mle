@@ -16,8 +16,15 @@ classifiers = [
     "Topic :: Security/Cryptography",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = ["pydantic>=2,<3"]
+
+[project.optional-dependencies]
+api = ["fastapi>=0.100", "uvicorn>=0.23"]
+dev = ["pytest>=8", "httpx>=0.25", "fastapi>=0.100", "uvicorn>=0.23"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "quantum_tomography*"]
 
 [project.scripts]
 quantum-state-tomography-mle = "quantum_tomography.cli:main"
