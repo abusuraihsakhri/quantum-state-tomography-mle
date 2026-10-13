@@ -35,4 +35,4 @@ jobs:
         python -m pip wheel --no-deps . -w /tmp/wheels
 
     - name: Verify browser MLE calculations
-      run: node --test web/tomography.test.mjs
+      run: node --test web/*.test.mjs
