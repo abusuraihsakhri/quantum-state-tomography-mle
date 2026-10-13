@@ -1,236 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum State Tomography Mle — Operations Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #090d16;
-            --card: #111827;
-            --border: #1f293d;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.25);
-            --text: #f3f4f6;
-            --text-muted: #9ca3af;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .header-title h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
-        .header-title p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
-        .badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--accent-glow);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 1.5rem;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        .card h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            background: #0d1322;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        .btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 0.7rem 1.4rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .btn:hover { background: #2563eb; }
-        .terminal {
-            background: #060911;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #10b981;
-            height: 380px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-        .metrics-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .metric-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-        .metric-val { font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 0.25rem; }
-        .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Single-qubit quantum state tomography from Pauli X, Y, and Z measurements using constrained maximum likelihood.">
+  <title>Quantum State Tomography · Maximum Likelihood</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: #15263b; background: #f5f7fa; }
+    * { box-sizing: border-box; }
+    body { max-width: 1070px; margin: auto; padding: clamp(18px, 4vw, 48px); line-height: 1.5; }
+    header { border-bottom: 1px solid #d9e1e8; padding-bottom: 22px; margin-bottom: 24px; }
+    .eyebrow { color: #356b8c; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.11em; }
+    h1 { font-size: clamp(1.7rem, 4vw, 2.5rem); letter-spacing: -0.035em; line-height: 1.15; margin: 8px 0 10px; }
+    h2 { font-size: 1.1rem; margin: 0 0 18px; }
+    p { color: #435368; max-width: 76ch; }
+    .layout { display: grid; grid-template-columns: minmax(280px, 0.95fr) minmax(340px, 1.25fr); gap: 20px; }
+    .panel { background: #fff; border: 1px solid #dce3ea; border-radius: 14px; padding: clamp(18px, 2.5vw, 26px); box-shadow: 0 3px 18px #1a30400b; }
+    label { display: block; font-size: 0.84rem; font-weight: 650; color: #34465b; }
+    select, input { width: 100%; padding: 10px 12px; font: inherit; border: 1px solid #b7c6d5; border-radius: 7px; background: white; color: #17283d; }
+    select:focus-visible, input:focus-visible, button:focus-visible { outline: 3px solid #79b9e8; outline-offset: 2px; }
+    .axis-heading { font-weight: 700; margin: 16px 0 7px; font-size: 0.9rem; }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pair label { display: grid; gap: 5px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    button { border-radius: 8px; border: 1px solid #a7bacb; padding: 10px 15px; font: inherit; font-weight: 650; cursor: pointer; background: white; color: #15354b; }
+    button.primary { background: #155c80; border-color: #155c80; color: white; }
+    button:hover:not(:disabled) { filter: brightness(0.94); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .status { margin-top: 14px; font-size: 0.9rem; padding: 12px; border-radius: 8px; }
+    .success { background: #e8f4ef; color: #165742; }
+    .error { background: #fff0ec; color: #92381f; }
+    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+    .stat { padding: 14px; border: 1px solid #e2e8ee; border-radius: 9px; background: #f9fbfc; min-width: 0; }
+    .stat small { display: block; font-size: 0.7rem; text-transform: uppercase; color: #51667a; font-weight: 700; letter-spacing: .04em; }
+    .stat strong { display: block; margin-top: 5px; font-size: clamp(0.82rem, 1.7vw, 1.15rem); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+    .component { display: grid; grid-template-columns: 17px 1fr 85px; align-items: center; gap: 12px; margin: 12px 0; }
+    .component code { text-align: right; font-variant-numeric: tabular-nums; font-size: .8rem; }
+    .bar { background: #e6ecf1; height: 13px; border-radius: 8px; position: relative; overflow: hidden; }
+    .bar::after { content: ''; position: absolute; height: 100%; left: 50%; width: 1px; background: #75899d; }
+    .bar-fill { position: absolute; background: #2786b0; height: 100%; }
+    pre { overflow: auto; padding: 16px; background: #11273a; color: #edf7ff; border-radius: 8px; font-size: .77rem; line-height: 1.65; }
+    footer { margin-top: 25px; color: #4d6277; font-size: .86rem; }
+    footer a { color: #155c80; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .summary { grid-template-columns: 1fr 1fr; } .component { grid-template-columns: 16px 1fr 84px; } }
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <div class="header-title">
-            <h1>Quantum State Tomography Mle</h1>
-            <p>Domain: Clinical & Cryptographic AI | Standard: CAP / CLSI / NIST Standards | LabMind-Atlas Architecture</p>
+  <header>
+    <div class="eyebrow">Quantum information · Single-qubit reconstruction</div>
+    <h1>Quantum State Tomography</h1>
+    <p>Estimate a physical density matrix from Pauli X, Y, and Z measurement counts by maximizing the binomial likelihood over the Bloch ball.</p>
+  </header>
+  <main class="layout">
+    <section class="panel" aria-labelledby="inputs-title">
+      <h2 id="inputs-title">Measurement outcomes</h2>
+      <label for="example">Example dataset</label>
+      <select id="example">
+        <option value="mixed">Mixed state · X polarization</option>
+        <option value="pure">Pure state · |0⟩</option>
+        <option value="boundary">Noisy observations · constrained MLE</option>
+      </select>
+      <form id="tomography-form">
+        <div class="axis-heading">Pauli X</div><div class="pair">
+          <label>+1 outcomes<input id="x-plus" inputmode="numeric" type="number" min="0" step="1" required value="90"></label>
+          <label>−1 outcomes<input id="x-minus" inputmode="numeric" type="number" min="0" step="1" required value="10"></label>
         </div>
-        <div>
-            <span class="badge">Air-Gapped Active</span>
-            <span class="badge" style="background: rgba(16,185,129,0.2); color: #10b981; border-color: #10b981;">Zero-PHI Guard Active</span>
+        <div class="axis-heading">Pauli Y</div><div class="pair">
+          <label>+1 outcomes<input id="y-plus" inputmode="numeric" type="number" min="0" step="1" required value="50"></label>
+          <label>−1 outcomes<input id="y-minus" inputmode="numeric" type="number" min="0" step="1" required value="50"></label>
         </div>
-    </div>
-
-    <div class="metrics-bar">
-        <div class="metric-box">
-            <div class="metric-label">System Status</div>
-            <div class="metric-val" style="color: var(--success);" id="m-status">OPTIMAL</div>
+        <div class="axis-heading">Pauli Z</div><div class="pair">
+          <label>+1 outcomes<input id="z-plus" inputmode="numeric" type="number" min="0" step="1" required value="50"></label>
+          <label>−1 outcomes<input id="z-minus" inputmode="numeric" type="number" min="0" step="1" required value="50"></label>
         </div>
-        <div class="metric-box">
-            <div class="metric-label">Tasks Processed</div>
-            <div class="metric-val" id="m-tasks">142</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">Audit Blocks Signed</div>
-            <div class="metric-val" id="m-audit">142</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">PHI Interceptions</div>
-            <div class="metric-val" style="color: var(--accent);" id="m-phi">0</div>
-        </div>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <h2>⚙️ Dispatch Distributed Component Audit</h2>
-            <div class="form-group">
-                <label>Task / Sample ID</label>
-                <input type="text" id="task_id" value="TASK-2026-LIVE-01">
-            </div>
-            <div class="form-group">
-                <label>Target Identifier</label>
-                <input type="text" id="target_id" value="SPECIMEN-ALPHA-77">
-            </div>
-            <div class="form-group">
-                <label>Primary Measurement / Value</label>
-                <input type="number" id="primary_metric" value="29.4" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Secondary Metric / Kinetic Index</label>
-                <input type="number" id="secondary_metric" value="14.8" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Status / Phenotype Descriptor</label>
-                <input type="text" id="status_descriptor" value="DISCORDANT_ANOMALY">
-            </div>
-            <div class="form-group">
-                <label><input type="checkbox" id="is_critical" checked> Trigger Emergency / Critical Flag</label>
-            </div>
-            <button class="btn" onclick="runAudit()">Execute Distributed Component Audit</button>
-        </div>
-
-        <div class="card">
-            <h2>📊 Real-Time Consensus Dossier & Audit Log</h2>
-            <div class="terminal" id="outputConsole">// Quantum State Tomography Mle Operations Console Ready
-// Connection established with Air-Gapped Supervisor
-// Cryptographic HMAC-SHA256 audit ledger loaded.
-// Ready for live task payload dispatch...</div>
-        </div>
-    </div>
-
-    <script>
-        async function runAudit() {
-            const consoleEl = document.getElementById('outputConsole');
-            consoleEl.innerText = "// Dispatching task across specialized workers...
-// Invoking InvariantQCWorker, SafetyEscalationWorker, ProtocolWorker...";
-
-            const payload = {
-                task_id: document.getElementById('task_id').value,
-                target_identifier: document.getElementById('target_id').value,
-                primary_metric: parseFloat(document.getElementById('primary_metric').value),
-                secondary_metric: parseFloat(document.getElementById('secondary_metric').value),
-                status_descriptor: document.getElementById('status_descriptor').value,
-                is_critical_flag: document.getElementById('is_critical').checked
-            };
-
-            try {
-                const res = await fetch('/api/audit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                consoleEl.innerText = JSON.stringify(data, null, 2);
-                document.getElementById('m-tasks').innerText = parseInt(document.getElementById('m-tasks').innerText) + 1;
-                document.getElementById('m-audit').innerText = parseInt(document.getElementById('m-audit').innerText) + 1;
-            } catch (err) {
-                consoleEl.innerText = "// Offline / Simulation Output:\n" + JSON.stringify({
-                    dossier_id: "DOSSIER-SIM-" + Math.floor(Math.random()*10000),
-                    system: "quantum-state-tomography-mle",
-                    domain: "Clinical & Cryptographic AI",
-                    task_id: payload.task_id,
-                    overall_urgency: payload.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK",
-                    integrity_status: "DISCORDANT_ANOMALY",
-                    alerts: [
-                        { worker: "InvariantQCWorker", alert: "Primary metric exceeds upper reference bound" },
-                        { worker: "SafetyEscalationWorker", alert: "Critical emergency interlock flag active" }
-                    ],
-                    audit_hash: "HMAC_SHA256_e83f9a72b941d6c381f9"
-                }, null, 2);
-            }
-        }
-    </script>
+        <div class="actions"><button class="primary" type="submit">Reconstruct state</button></div>
+      </form>
+      <p id="status" role="status" aria-live="polite" class="status"></p>
+    </section>
+    <section class="panel" id="results" aria-labelledby="results-title" hidden>
+      <h2 id="results-title">Reconstructed density matrix</h2>
+      <div class="summary">
+        <div class="stat"><small>Measurement shots</small><strong id="shots">—</strong></div>
+        <div class="stat"><small>Purity · Tr(ρ²)</small><strong id="purity">—</strong></div>
+        <div class="stat"><small>Log likelihood</small><strong id="likelihood">—</strong></div>
+      </div>
+      <h2>Bloch vector</h2>
+      <div class="component"><b>X</b><div class="bar" role="img"><div class="bar-fill" id="x-bar"></div></div><code id="x-value">—</code></div>
+      <div class="component"><b>Y</b><div class="bar" role="img"><div class="bar-fill" id="y-bar"></div></div><code id="y-value">—</code></div>
+      <div class="component"><b>Z</b><div class="bar" role="img"><div class="bar-fill" id="z-bar"></div></div><code id="z-value">—</code></div>
+      <h2 style="margin-top:26px">Density matrix · real + imaginary</h2>
+      <pre id="matrix" aria-label="Estimated two by two complex density matrix"></pre>
+      <div class="actions"><button id="download-json" type="button" disabled>Export JSON</button><button id="download-csv" type="button" disabled>Export CSV</button></div>
+    </section>
+  </main>
+  <footer>
+    <p>Calculations run locally in your browser; no uploads, telemetry, or backend. Supports independent Pauli-axis projective counts for a <strong>single qubit</strong>. This estimate does not provide confidence intervals, readout-error correction, or multi-qubit reconstruction.</p>
+    <a href="https://github.com/abusuraihsakhri/quantum-state-tomography-mle">Source repository</a>
+  </footer>
+  <script type="module" src="./app.mjs"></script>
 </body>
 </html>
